@@ -75,13 +75,13 @@
         .timer-wrapper {
             margin: 0;
             padding: 20px 40px;
-            width: 42.5%;
+            width: 40%;
         }
 
         .trebek {
             margin: 20px 0 0 0;
             padding: 40px 0;
-            width: 15%;
+            width: 20%;
         }
 
         .trebek img {
@@ -151,13 +151,13 @@
             border-radius: 8px;
             color: black;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 20px;
             margin-top: 40px;
             padding: 8px 16px;
             text-transform: uppercase;
-            -webkit-transition: all 0.3s ease-in-out;
-            -o-transition: all 0.3s ease-in-out;
-            transition: all 0.3s ease-in-out;
+            -webkit-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
         }
 
         .start-timer:hover,
@@ -168,7 +168,7 @@
         }
 
         h2 {
-            font-size: 2.25rem;
+            font-size: 1.75rem;
         }
 
         .hl {
@@ -182,7 +182,7 @@
         }
 
         .scoreboard-title {
-            font-size: 24px;
+            font-size: 20px;
         }
 
         svg.old {
@@ -279,6 +279,7 @@
         clueButton.addEventListener('click', function () {
             clue.innerHTML = '';
             answer.innerHTML = '';
+            value.innerHTML = '';
             fetch('https://jservice.io/api/random')
                 .then(response => response.json())
                 .then(data => {
@@ -415,9 +416,6 @@
             }
 
             function destroyTimer() {
-                var audio = new Audio('horn.mp3');
-                audio.volume = 0.25;
-                audio.play();
             }
 
             function arcTween(b) {
