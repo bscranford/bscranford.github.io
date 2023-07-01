@@ -3,47 +3,46 @@ layout: labs
 ---
 
 <section class="labs-wrapper">
-  <h2>English Premier League</h2>
-  <h3>Live Table</h3>
+    <h2>English Premier League</h2>
+    <h3>Live Table</h3>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Position</th>
-        <th>Team</th>
-        <th>GP</th>
-        <th>W</th>
-        <th>L</th>
-        <th>D</th>
-        <th>GF</th>
-        <th>GA</th>
-        <th>GD</th>
-        <th>Points</th>
-      </tr>
-    </thead>
+    <table>
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Team</th>
+                <th>GP</th>
+                <th>W</th>
+                <th>L</th>
+                <th>D</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>GD</th>
+                <th>Points</th>
+            </tr>
+        </thead>
 
-    <tbody class="table-body"></tbody>
-  </table>
+        <tbody class="table-body"></tbody>
+    </table>
 </section>
 
 <script>
-  fetch("https://api.football-data.org/v2/competitions/PL/standings", {
-    headers: {
-      "X-Auth-Token": "0f8fe93853ab4763870ea7b099e519de"
-    }
-  })
-    .then(response => response.json())
-    .then(data => {
-      data.standings[0].table.map(row => {
-        let team = document.createElement("tr");
-        team.innerHTML = `<tr>
+    fetch("https://api.football-data.org/v4/competitions/PL/standings", {
+        headers: {
+            "X-Auth-Token": "0f8fe93853ab4763870ea7b099e519de"
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            data.standings[0].table.map(row => {
+                let team = document.createElement("tr");
+                team.innerHTML = `<tr>
                               <td>${row.position}</td>
                               <td>
                                 <div class="team-row">
                                   <img src=${row.team.crestUrl}>
-                                  <p><a href="team?id=${row.team.id}">${
-          row.team.name
-        }</a></p>
+                                  <p><a href="team?id=${row.team.id}">${row.team.name
+                    }</a></p>
                                 </div>
                               </td>
                               <td>${row.playedGames}</td>
@@ -55,7 +54,7 @@ layout: labs
                               <td>${row.goalDifference}</td>
                               <td>${row.points}</td>
                             </tr>`;
-        document.querySelector(".table-body").appendChild(team);
-      });
-    });
+                document.querySelector(".table-body").appendChild(team);
+            });
+        });
 </script>
