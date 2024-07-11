@@ -36,3 +36,4 @@ next-env.d.ts
 
 # labs
 /src/pages
+/out/labs
