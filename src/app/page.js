@@ -1,5 +1,6 @@
 import caret from "../../public/svg/caret-down.svg";
 import Image from 'next/image'
+import './styles.css'
 
 export default function Home() {
     return (
