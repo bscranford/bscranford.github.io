@@ -1,1 +1,0 @@
-self.__BUILD_MANIFEST={__rewrites:{afterFiles:[],beforeFiles:[],fallback:[]},"/_error":["static/chunks/pages/_error-1be831200e60c5c0.js"],"/labs":["static/chunks/pages/labs-b87342e7afe2d989.js"],"/labs/jeopardy":["static/chunks/pages/labs/jeopardy-93e9f96885f79b1f.js"],sortedPages:["/_app","/_error","/labs","/labs/jeopardy"]},self.__BUILD_MANIFEST_CB&&self.__BUILD_MANIFEST_CB();

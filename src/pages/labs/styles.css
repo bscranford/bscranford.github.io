@@ -1,0 +1,23 @@
+.projects-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+
+    li {
+        align-items: center;
+        border: 4px solid teal;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        row-gap: 1rem;
+    }
+
+    img {
+        border: 1px solid #b8b8b8;
+    }
+}
