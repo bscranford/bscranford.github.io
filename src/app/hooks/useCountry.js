@@ -2780,9 +2780,11 @@ function useCountry() {
 	}
 
     const fullCountryList = countries;
-	const _country = timezones[timezone].c[0];
-	const detectedCountry = countries[_country];
-    const detectedCountryCode = _country;
+	//const _country = timezones[timezone].c[0];
+	//const detectedCountry = countries[_country];
+    const detectedCountry = "Afghanistan";
+    //const detectedCountryCode = _country;
+    const detectedCountryCode = "AF";
 	return { detectedCountry, detectedCountryCode, fullCountryList, countryDetected };
 }
 
