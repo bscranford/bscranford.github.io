@@ -85,18 +85,13 @@ export default function ThreatenedSpecies() {
         let countryCenter = null;
 
         // Filter all geoData to return current country data
+        let scaleFactor = 1;
         countryMap.features = geoData.features.filter(function(d){
+            if (d.properties.zoom) {
+                scaleFactor = d.properties.zoom
+            }
             return d.properties.name == state.country;
         })
-
-        // Get zoom factor
-        const scaleFactor = () => {
-            if (countryMap.features[0].properties.zoom) {
-                return (900 * countryMap.features[0].properties.zoom);
-            } else {
-                return 900;
-            }
-        }
 
         // Get centroid coordinates for current country
         geoJsonCentroid.features.forEach((feature) => {
@@ -112,7 +107,7 @@ export default function ThreatenedSpecies() {
             // Setup map and projection
             const projection = d3.geoMercator()
                 .center(countryCenter)
-                .scale(scaleFactor()) // "Zoom"
+                .scale(900 * scaleFactor) // "Zoom"
                 .translate([ 400, 200 ]) // width and height / 2
 
             // Draw the map
