@@ -102,6 +102,10 @@ tbody {
         text-decoration: none;
     }
 
+    .map-pin {
+        font-size: 1rem;
+    }
+
     hr {
         display: block;
         height: 1px;
@@ -174,16 +178,8 @@ tbody {
     .desktop-only {
         display: none;
     }
-}
-
-@media screen and (max-width: 400px) {
+    
     .popover-div {
-        padding: 0.5rem;
-
-        img {
-            height: 75px;
-        }
-
         .desktop-only {
             display: none;
         }
@@ -199,6 +195,20 @@ tbody {
                     font-size: 1.2rem;
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .popover-div {
+        padding: 0.5rem;
+
+        img {
+            height: 75px;
+        }
+
+        .desktop-only {
+            display: none;
         }
     }
 }

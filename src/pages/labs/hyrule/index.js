@@ -1,6 +1,7 @@
 import {Tabs, Tab} from "@nextui-org/tabs";
+import Head from 'next/head';
 import useFetch from '../../../app/hooks/useFetch';
-import './styles.css'
+import './styles.css';
 
 export default function Hyrule() {
     // Fetch compendium data
@@ -43,6 +44,10 @@ export default function Hyrule() {
 
     return (
         <main>
+            <Head>
+                <title>Brad Cranford - Breath of the Wild Compendium</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <header className="wrapper">
                 <h1>Breath of the Wild<br />Compendium</h1>
             </header>

@@ -1,5 +1,6 @@
 import './styles.css'
 import tableData from './standings.json'
+import Head from 'next/head'
 
 const crestsDir = require.context('../../../../public/images/team-crests', false);
 function returnCrestSrc(crestFileName) {
@@ -9,6 +10,10 @@ function returnCrestSrc(crestFileName) {
 export default function Epl() {
     return (
         <main>
+            <Head>
+                <title>Brad Cranford - EPL All Time Standings</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
             <header className="wrapper">
                 <h1>EPL All Time Standings</h1>
             </header>
@@ -51,7 +56,7 @@ export default function Epl() {
                     <div className="popover-div" key={index} id={index} popover="auto" style={{borderColor: club.colors[0]}}>
                         { /* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={returnCrestSrc(club.crest)} alt={`Club crest of ${club.team}`} />
-                        <h2>{club.team} <a href={club.officialSite} target="_blank">🔗</a></h2>
+                        <h2>{club.team} <a href={club.officialSite} title="External link to the official club website" target="_blank">🔗</a></h2>
                         <div className="stat-card-lockup">
                             <div className="stat-card">
                                 <p className="stat-name">Location</p>
@@ -73,7 +78,7 @@ export default function Epl() {
                             </div>
                         </div>
                         <div className="stat-list">
-                            <p>Stadium: {club.stadium}</p>
+                            <p>Stadium: {club.stadium} <a href={club.stadiumMapLink} title="External link to this stadium in Google Maps" target="_blank" className="map-pin">📍</a></p>
                             <hr />
                             <p>Biggest Win: {club.biggestWin}</p>
                             <hr />
