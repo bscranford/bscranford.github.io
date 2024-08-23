@@ -5,7 +5,7 @@ import geoJson from '../threatened-species/geo.json'
 import geoJsonCentroid from '../threatened-species/geoCentroids.json'
 import useFetch from '@/app/hooks/useFetch';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -58,9 +58,7 @@ export default function ThreatenedSpecies() {
     const threatenedAvg = 181;
     const threatenedSpecies = vulnerableCount + endangeredCount + criticalCount;
     
-    // TO-DO need to find a way to wait until you get your totals for above before you run this code
-    // otherwise it will just return green cause the first number that comes back is zero
-    function updateColor() {
+    const updateColor = useCallback(() => {
         if (threatenedSpecies == 0) {
             return 'white';
         }
@@ -71,7 +69,7 @@ export default function ThreatenedSpecies() {
         } else {
             return 'darkgreen';
         }
-    }
+    }, [threatenedSpecies]);
 
     // Reference to svg to populate with map
     const svgRef = useRef(null);
@@ -129,7 +127,7 @@ export default function ThreatenedSpecies() {
                 )
                 .style("stroke", "none")
         }
-    }, [state.country, threatenedSpecies]);
+    }, [state.country, threatenedSpecies, geoData.features, updateColor]);
 
     // Manual country selection handling
     function updateCountryCode(object, value) {
