@@ -38,6 +38,10 @@ export default function ThreatenedSpecies() {
     const url = "https://apiv3.iucnredlist.org/api/v3/country/getspecies/" + state.countryCode;
     const { data, loading, error } = useFetch(url + process.env.redListToken);
 
+    if (error) {
+        console.log(error);
+    }
+
     // Get count of VU, EN, and CR species
     let vulnerableCount = 0;
     let endangeredCount = 0;
