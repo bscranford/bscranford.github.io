@@ -11,13 +11,7 @@ import LoadingSpinner from './LoadingSpinner';
 
 export default function ThreatenedSpecies() {
     // Get the user's country from their browser
-    let { detectedCountry, detectedCountryCode, fullCountryList, countryDetected } = useCountry();
-
-    // If country can't be detected, set to first country
-    if (countryDetected == false) {
-        detectedCountry = "Afghanistan";
-        detectedCountryCode = "AF"
-    }
+    let { detectedCountry, detectedCountryCode, fullCountryList } = useCountry();
 
     // Set state and default values
     const [state, setState] = useState({
