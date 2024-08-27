@@ -1,6 +1,6 @@
 import './styles.css';
-import useCountry from '../../../app/hooks/useCountry';
 import * as d3 from 'd3'
+import fullCountryList from '../threatened-species/countryList.json'
 import geoJson from '../threatened-species/geo.json'
 import geoJsonCentroid from '../threatened-species/geoCentroids.json'
 import useFetch from '@/app/hooks/useFetch';
@@ -10,16 +10,15 @@ import { useRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
 export default function ThreatenedSpecies() {
-    // Get the user's country from their browser
-    let { detectedCountry, detectedCountryCode, fullCountryList } = useCountry();
-
     // Set state and default values
     const [state, setState] = useState({
-        country: detectedCountry,
-        countryCode: detectedCountryCode,
+        country: "United States of America",
+        countryCode: "US",
         selectedCountry: ''
     })
 
+
+    // Get country's flag
     function getFlagEmoji(countryCode) {
         const codePoints = countryCode
           .toUpperCase()
@@ -122,7 +121,7 @@ export default function ThreatenedSpecies() {
         }
     }, [state.country, threatenedSpecies, geoData.features, updateColor]);
 
-    // Manual country selection handling
+    // Country selection handling
     function updateCountryCode(object, value) {
         return Object.keys(object).find(key => object[key] === value);
     }
