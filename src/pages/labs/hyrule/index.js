@@ -5,7 +5,7 @@ import './styles.css';
 
 export default function Hyrule() {
     // Fetch compendium data
-    const { data, loading, error } = useFetch('https://botw-compendium.herokuapp.com/api/v3/compendium/all?game=1');
+    const { data, loading, error } = useFetch('https://botw-compendium.herokuapp.com/api/v3/compendium/all?game=2');
     if (loading) return <div className="content-wrapper">Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
@@ -32,7 +32,7 @@ export default function Hyrule() {
                         <div>
                             <p className='item-name'>Name: {item.name.toUpperCase()}</p>
                             <p>Description: {item.description}</p>
-                            <p>Common Locations: {JSON.stringify(item.common_locations, null, ' ').replace(/]|[[]/g, '').replace(/"/g, '')}</p>
+                            <p>Common Locations: {JSON.stringify(item.common_locations, (key, value) => value === null ? "None Listed" : value, ' ').replace(/]|[[]/g, '').replace(/"/g, '')}</p>
                         </div>
                         { /* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={item.image} alt="Image"/>
@@ -45,11 +45,11 @@ export default function Hyrule() {
     return (
         <main>
             <Head>
-                <title>Brad Cranford - Breath of the Wild Compendium</title>
+                <title>Brad Cranford - Tears of the Kingdom Compendium</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <header className="wrapper">
-                <h1>Breath of the Wild<br />Compendium</h1>
+                <h1>Tears of the Kingdom<br />Compendium</h1>
             </header>
             <section className="content-wrapper">
                 <Tabs aria-label="Categories">
