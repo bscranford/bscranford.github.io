@@ -56,9 +56,11 @@ footer p {
         font-weight: 700;
         letter-spacing: 15px;
         line-height: 1;
+        margin: 2rem auto;
+        width: 5ch;
+        overflow-wrap: break-word;
         text-align: center;
         text-transform: uppercase;
-        width: 100%;
     }
 
     svg {
@@ -96,6 +98,13 @@ a {
     #hero > h1 {
         background: none;
         color: #fefefe;
-        font-size: 30vw;
+        font-size: 32px;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+@media screen and (max-width: 400px) {
+    #hero > h1 {
+        font-size: 24px;
     }
 }
