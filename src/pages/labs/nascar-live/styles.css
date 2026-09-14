@@ -1,0 +1,441 @@
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@400;500;600;700;800;900&display=swap');
+
+@font-face {
+    font-family: 'Space Mono';
+    src: url('../../../../public/fonts/SpaceMono-Regular.ttf');
+}
+
+:root {
+    --nascar-bg: #070b13;
+    --nascar-panel: #101827;
+    --nascar-panel-alt: #121d2d;
+    --nascar-border: rgba(148, 163, 184, 0.2);
+    --nascar-text: #e5edf7;
+    --nascar-muted: #9fb0c8;
+    --nascar-accent: #f4c542;
+    --nascar-accent-soft: rgba(244, 197, 66, 0.12);
+    --nascar-success: #7adf9a;
+    --nascar-shadow: rgba(0, 0, 0, 0.35);
+}
+
+.nascar-page {
+    --font-scale: 1;
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, rgba(34, 73, 124, 0.46), transparent 35%),
+        var(--nascar-bg);
+    color: var(--nascar-text);
+    font-size: calc(16px * var(--font-scale));
+    padding: 2rem 1rem 3rem;
+}
+
+.nascar-page * {
+    box-sizing: border-box;
+}
+
+.settings-group {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.settings-label {
+    color: var(--nascar-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.delay-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: var(--nascar-muted);
+}
+
+.delay-picker span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.settings-card select {
+    appearance: auto;
+    border: 1px solid var(--nascar-border);
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--nascar-text);
+    width: 100%;
+    min-height: 2.15rem;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.78rem;
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 1.2;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.summary-grid,
+.table-card {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.data-card,
+.table-card {
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0.92), rgba(10, 14, 22, 0.96));
+    border: 1px solid var(--nascar-border);
+    border-radius: 18px;
+    box-shadow: 0 24px 48px var(--nascar-shadow);
+}
+
+.data-card {
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 0.4rem;
+}
+
+.data-card .label,
+.leader-card .label {
+    color: var(--nascar-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.centered-label {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.data-card strong {
+    font-size: calc(1.3rem * var(--font-scale));
+    line-height: 1.15;
+}
+
+.track-card {
+    align-items: stretch;
+}
+
+.fastest-card {
+    align-items: stretch;
+}
+
+.fastest-driver {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.fastest-driver-info {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+    text-align: center;
+}
+
+.fastest-card .car-badge {
+    transform: translateY(0);
+}
+
+.fastest-card .car-number-image {
+    width: 5em;
+    height: 2.5em;
+}
+
+.fastest-driver-info strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: calc(1rem * var(--font-scale));
+}
+
+.fastest-driver-info span {
+    color: var(--nascar-muted);
+    font-size: calc(0.72rem * var(--font-scale));
+}
+
+.settings-card {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+    justify-content: center;
+}
+
+.settings-card>.centered-label {
+    grid-column: 1 / -1;
+}
+
+.settings-card .settings-group,
+.settings-card .delay-picker {
+    min-width: 0;
+}
+
+.lap-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    flex: 1;
+}
+
+.race-progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+    color: var(--nascar-text);
+    text-align: center;
+}
+
+.race-progress-meta strong {
+    width: 100%;
+    font-size: calc(1rem * var(--font-scale));
+}
+
+.progress-track {
+    width: 100%;
+    height: 0.95rem;
+    background: rgba(148, 163, 184, 0.12);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.progress-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+}
+
+.progress-fill.flag-changing {
+    animation: flag-status-flash 1.8s linear forwards;
+}
+
+@keyframes flag-status-flash {
+
+    0%,
+    33.33%,
+    66.66%,
+    100% {
+        background-color: var(--flag-color);
+    }
+
+    16.66%,
+    49.99%,
+    83.33% {
+        background-color: transparent;
+    }
+}
+
+.table-card {
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.2rem 0.8rem;
+    border-bottom: 1px solid var(--nascar-border);
+}
+
+.race-progress-header {
+    display: block;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.nascar-page table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.nascar-page th,
+.nascar-page td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid var(--nascar-border);
+    text-align: center;
+}
+
+.nascar-page .driver-name-cell {
+    text-align: left;
+}
+
+.nascar-page thead th {
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(148, 163, 184, 0.05);
+    color: var(--nascar-muted);
+}
+
+.nascar-page tbody tr:hover {
+    background: rgba(148, 163, 184, 0.06);
+}
+
+.nascar-page tbody td {
+    white-space: nowrap;
+}
+
+.position-value {
+    font-family: 'Doto', 'Space Mono', monospace;
+    font-size: calc(1.35rem * var(--font-scale));
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-shadow: 0 0 0.7rem rgba(248, 250, 252, 0.18);
+}
+
+.trend-cell {
+    display: table-cell;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.trend-cell.gaining {
+    color: var(--nascar-success);
+}
+
+.trend-cell.falling {
+    color: #fda4af;
+}
+
+.trend-cell.even {
+    color: var(--nascar-muted);
+}
+
+.trend-indicator {
+    display: inline-block;
+    width: 1.1rem;
+}
+
+@media (max-width: 800px) {
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.car-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #f8fafc;
+    background: rgba(148, 163, 184, 0.2);
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.car-badge {
+    gap: 0.3em;
+    padding: 0;
+    font-size: inherit;
+    line-height: 1;
+    transform: translateY(4px);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+.car-number-cell {
+    vertical-align: middle;
+}
+
+.car-number-image {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5em;
+    height: 1.25em;
+}
+
+.car-number-image img,
+.manufacturer-logo {
+    display: block;
+    object-fit: contain;
+}
+
+.car-number-image img {
+    width: 100%;
+    height: 100%;
+}
+
+.manufacturer-logo {
+    width: 2.2em;
+    height: 1.5em;
+}
+
+.car-badge-divider {
+    color: var(--nascar-muted);
+    font-size: 0.8em;
+}
+
+.manufacturer-fallback {
+    color: var(--nascar-muted);
+    font-size: 0.62em;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.car-number-fallback {
+    font-size: 0.72em;
+}
+
+.tiny-badge {
+    width: 0.7rem;
+    height: 0.7rem;
+    padding: 0;
+    margin-right: 0.45rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.nascar-page.spacing-dense th,
+.nascar-page.spacing-dense td {
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+}
+
+.nascar-page.spacing-compact th,
+.nascar-page.spacing-compact td {
+    padding-top: 0.28rem;
+    padding-bottom: 0.28rem;
+}
+
+.status-banner {
+    max-width: 1280px;
+    margin: 0 auto 1rem;
+    background: rgba(244, 197, 66, 0.1);
+    border: 1px solid rgba(244, 197, 66, 0.25);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    color: var(--nascar-text);
+}

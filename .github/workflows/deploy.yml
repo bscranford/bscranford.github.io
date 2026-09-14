@@ -1,0 +1,63 @@
+name: Deploy Next.js site to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            personal-site/package-lock.json
+            personal-site/package.json
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          APP_DIR="$( [ -d ./personal-site ] && echo ./personal-site || echo . )"
+          echo "APP_DIR=$APP_DIR" >> "$GITHUB_ENV"
+          cd "$APP_DIR"
+          npm ci
+
+      - name: Build static site
+        shell: bash
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          cd "$APP_DIR"
+          npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.APP_DIR }}/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

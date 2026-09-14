@@ -1,10 +1,16 @@
 /** @type {import('next').NextConfig} */
+const repoInfo = process.env.GITHUB_REPOSITORY?.split('/') ?? [];
+const owner = repoInfo[0] ?? '';
+const repoName = repoInfo[1] ?? '';
+const isUserPages = repoName.toLowerCase() === `${owner.toLowerCase()}.github.io`;
+const basePath = !repoName || isUserPages ? '' : `/${repoName}`;
+
 const nextConfig = {
-    output: "export",
+    output: 'export',
+    trailingSlash: true,
+    reactStrictMode: true,
     images: { unoptimized: true },
-    env: {
-        redListToken: '?token=9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee'
-    }
+    ...(basePath ? { basePath, assetPrefix: `${basePath}/` } : {})
 };
 
 export default nextConfig;

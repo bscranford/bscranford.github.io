@@ -1,3 +1,43 @@
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    background: teal;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: 0;
+    border-radius: 0 0 0.5rem 0.5rem;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.skip-link:hover,
+.skip-link:focus,
+.skip-link:focus-visible {
+    top: 0;
+    opacity: 1;
+    pointer-events: auto;
+    background: teal;
+    color: white;
+    box-shadow: none;
+    border: 0;
+}
+
 body {
     color: var(--base-font-color);
     font-family: var(--base-font-family);
@@ -76,16 +116,23 @@ a {
     -webkit-transition: background 0.5s cubic-bezier(0.33, 0.66, 0.66, 1);
     -o-transition: background 0.5s cubic-bezier(0.33, 0.66, 0.66, 1);
     transition: background 0.5s cubic-bezier(0.33, 0.66, 0.66, 1);
+}
 
-    &:hover {
-        background-color: teal;
-        color: #fefefe !important;
-        text-decoration: none;
-    }
+a:hover {
+    background-color: teal;
+    color: #fefefe !important;
+    text-decoration: none;
+}
 
-    &:visited {
-        color: var(--base-font-color);
-    }
+a:focus-visible {
+    outline: 3px solid teal;
+    outline-offset: 3px;
+    background-color: teal;
+    color: #fefefe !important;
+}
+
+a:visited {
+    color: var(--base-font-color);
 }
 
 /* Media Queries */
@@ -95,7 +142,7 @@ a {
         width: 80vw;
     }
 
-    #hero > h1 {
+    #hero>h1 {
         background: none;
         color: #fefefe;
         font-size: 32px;
@@ -103,8 +150,9 @@ a {
         width: 100%;
     }
 }
+
 @media screen and (max-width: 400px) {
-    #hero > h1 {
+    #hero>h1 {
         font-size: 24px;
     }
 }

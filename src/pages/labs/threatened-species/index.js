@@ -21,25 +21,25 @@ export default function ThreatenedSpecies() {
     // Get country's flag
     function getFlagEmoji(countryCode) {
         const codePoints = countryCode
-          .toUpperCase()
-          .split('')
-          .map(char =>  127397 + char.charCodeAt());
+            .toUpperCase()
+            .split('')
+            .map(char => 127397 + char.charCodeAt());
         return String.fromCodePoint(...codePoints);
     }
 
     // Fetch red list data
     const url = "https://apiv3.iucnredlist.org/api/v3/country/getspecies/" + state.countryCode;
-    const { data, loading, error } = useFetch(url + process.env.redListToken);
+    const { data, loading, error } = useFetch(url);
 
     if (error) {
-        console.log(error);
+        console.error(error);
     }
 
     // Get count of VU, EN, and CR species
     let vulnerableCount = 0;
     let endangeredCount = 0;
     let criticalCount = 0;
-    if (data.result) {
+    if (data?.result) {
         data.result.forEach((item) => {
             if (item.category == "VU") {
                 vulnerableCount++;
@@ -54,7 +54,7 @@ export default function ThreatenedSpecies() {
     // Return color based on count relative to avg
     const threatenedAvg = 181;
     const threatenedSpecies = vulnerableCount + endangeredCount + criticalCount;
-    
+
     const updateColor = useCallback(() => {
         if (threatenedSpecies == 0) {
             return 'white';
@@ -70,7 +70,7 @@ export default function ThreatenedSpecies() {
 
     // Reference to svg to populate with map
     const svgRef = useRef(null);
-    
+
     // Build country map
     const geoData = geoJson;
     useEffect(() => {
@@ -79,7 +79,7 @@ export default function ThreatenedSpecies() {
 
         // Filter all geoData to return current country data
         let scaleFactor = 1;
-        countryMap.features = geoData.features.filter(function(d){
+        countryMap.features = geoData.features.filter(function (d) {
             if (d.properties.zoom) {
                 scaleFactor = d.properties.zoom
             }
@@ -101,13 +101,13 @@ export default function ThreatenedSpecies() {
             const projection = d3.geoMercator()
                 .center(countryCenter)
                 .scale(900 * scaleFactor) // "Zoom"
-                .translate([ 400, 200 ]) // width and height / 2
+                .translate([400, 200]) // width and height / 2
 
             // Draw the map
             const svgContainer = d3.select(".svgMap")
                 .append('svg')
                 .attr('viewBox', '0 0 800 450')
-            
+
             svgContainer.append("g")
                 .selectAll("path")
                 .data(countryMap.features)
@@ -174,7 +174,7 @@ export default function ThreatenedSpecies() {
                             </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                            <tr>
                                 <td>Average</td>
                                 <td>69</td>
                                 <td>72</td>
@@ -191,14 +191,14 @@ export default function ThreatenedSpecies() {
                         </tbody>
                     </table>
                 </div>
-                
+
                 {loading &&
                     <div className="loading-state">
                         <LoadingSpinner />
                     </div>
                 }
 
-                <small>Data provided by the <a href="https://www.iucnredlist.org/" target='_blank'>IUCN Red List</a></small>
+                <small>Data provided by the <a href="https://www.iucnredlist.org/" target="_blank" rel="noreferrer noopener">IUCN Red List</a></small>
             </section>
         </main>
     );
