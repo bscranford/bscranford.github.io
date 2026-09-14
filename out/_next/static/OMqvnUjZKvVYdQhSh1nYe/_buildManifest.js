@@ -12,7 +12,7 @@ self.__BUILD_MANIFEST = {
     "static/chunks/2hbvwx4h7i5uw.js"
   ],
   "/labs/nascar-live": [
-    "static/chunks/0f1g4yrtamlx-.js"
+    "static/chunks/3-26yer7thg9w.js"
   ],
   "/labs/threatened-species": [
     "static/chunks/22d7tbl-pupv2.js"
