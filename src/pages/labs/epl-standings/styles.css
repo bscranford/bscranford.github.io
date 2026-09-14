@@ -117,7 +117,7 @@ html {
 
     &:popover-open {
         animation: fadeIn 0.5s forwards;
-    
+
         &::backdrop {
             animation: backdropFadeIn 0.5s forwards;
         }
@@ -160,13 +160,25 @@ html {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0 }
-    to { opacity: 1 }
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
 }
 
 @keyframes backdropFadeIn {
-    from { background: hsl(0 0% 0% / 0%); backdrop-filter: blur(0); }
-    to { background: hsl(0 0% 0% / 50%); backdrop-filter: blur(6px); }
+    from {
+        background: hsl(0 0% 0% / 0%);
+        backdrop-filter: blur(0);
+    }
+
+    to {
+        background: hsl(0 0% 0% / 50%);
+        backdrop-filter: blur(6px);
+    }
 }
 
 @media screen and (max-width: 900px) {
@@ -179,7 +191,7 @@ html {
     .desktop-only {
         display: none;
     }
-    
+
     .popover-div {
         .desktop-only {
             display: none;

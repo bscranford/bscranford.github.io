@@ -53,7 +53,7 @@ export default function Epl() {
                     </tbody>
                 </table>
                 {tableData.map((club, index) => (
-                    <div className="popover-div" key={index} id={index} popover="auto" style={{borderColor: club.colors[0]}}>
+                    <div className="popover-div" key={index} id={index} popover="auto" style={{ borderColor: club.colors[0] }}>
                         { /* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={returnCrestSrc(club.crest)} alt={`Club crest of ${club.team}`} />
                         <h2>{club.team} <a href={club.officialSite} title="External link to the official club website" target="_blank">🔗</a></h2>
@@ -69,7 +69,7 @@ export default function Epl() {
                             <div className="stat-card">
                                 <p className="stat-name">Colors</p>
                                 {club.colors.map((color, index) => (
-                                    <span className="dot" key={index} style={{backgroundColor: color}}></span>
+                                    <span className="dot" key={index} style={{ backgroundColor: color }}></span>
                                 ))}
                             </div>
                             <div className="stat-card">
@@ -92,7 +92,7 @@ export default function Epl() {
                             <hr className="desktop-only" />
                             <p className="desktop-only">Did You Know?<br />{club.weirdFact}</p>
                         </div>
-                        
+
                     </div>
                 ))}
             </section>
