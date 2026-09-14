@@ -9,7 +9,7 @@ function returnCrestSrc(crestFileName) {
 
 export default function Epl() {
     return (
-        <main>
+        <main className="epl-page">
             <Head>
                 <title>Brad Cranford - EPL All Time Standings</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />

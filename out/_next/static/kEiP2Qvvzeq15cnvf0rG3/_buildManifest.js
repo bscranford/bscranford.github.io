@@ -6,13 +6,13 @@ self.__BUILD_MANIFEST = {
     "static/chunks/3b0hoqvj85d3r.js"
   ],
   "/labs/epl-standings": [
-    "static/chunks/1gi1ki21kawfx.js"
+    "static/chunks/17f8dk3e07t0g.js"
   ],
   "/labs/hyrule": [
     "static/chunks/2hbvwx4h7i5uw.js"
   ],
   "/labs/nascar-live": [
-    "static/chunks/3evs6vwighdf-.js"
+    "static/chunks/0f1g4yrtamlx-.js"
   ],
   "/labs/threatened-species": [
     "static/chunks/22d7tbl-pupv2.js"

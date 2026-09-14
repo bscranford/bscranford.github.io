@@ -52,9 +52,9 @@ const flagStateColors = {
 };
 
 const sizeOptions = {
-    s: { label: 'S', multiplier: 1 },
-    m: { label: 'M', multiplier: 1.5 },
-    l: { label: 'L', multiplier: 2 },
+    s: { label: 'Small', multiplier: 1 },
+    m: { label: 'Medium', multiplier: 1.5 },
+    l: { label: 'Large', multiplier: 2 },
 };
 
 const spacingOptions = {
@@ -64,6 +64,23 @@ const spacingOptions = {
 };
 
 const delayOptions = [0, 5, 10, 15, 20, 25, 30];
+const gearIcon = '⚙';
+
+const columnOptions = {
+    car: 'Car',
+    trend: 'Trend',
+    laps: 'Laps',
+    averageSpeed: 'Avg',
+    averagePosition: 'Avg pos',
+    lapsLed: 'Led',
+    pitAverage: 'Pit avg',
+    lastLap: 'Last lap',
+    bestLap: 'Best lap',
+    passes: 'Passes',
+    gap: 'Gap',
+};
+
+const defaultColumns = Object.fromEntries(Object.keys(columnOptions).map((key) => [key, true]));
 
 function formatClock(totalSeconds) {
     if (typeof totalSeconds !== 'number' || !Number.isFinite(totalSeconds)) {
@@ -121,12 +138,12 @@ function getManufacturerLogo(manufacturer) {
     return null;
 }
 
-function NascarCarBadge({ carNumber, manufacturer }) {
+function NascarCarBadge({ carNumber, manufacturer, showManufacturer = true }) {
     const [imageFailed, setImageFailed] = useState(false);
     const [manufacturerImageFailed, setManufacturerImageFailed] = useState(false);
     const normalizedNumber = String(carNumber ?? '--').trim();
     const hasNumber = normalizedNumber !== '--' && normalizedNumber !== '';
-    const manufacturerLogo = getManufacturerLogo(manufacturer);
+    const manufacturerLogo = showManufacturer ? getManufacturerLogo(manufacturer) : null;
 
     useEffect(() => {
         setImageFailed(false);
@@ -146,16 +163,20 @@ function NascarCarBadge({ carNumber, manufacturer }) {
                     <span className="car-number-fallback">{normalizedNumber}</span>
                 )}
             </span>
-            <span className="car-badge-divider" aria-hidden="true">|</span>
-            {manufacturerLogo && !manufacturerImageFailed ? (
-                <img
-                    className="manufacturer-logo"
-                    src={manufacturerLogo.url}
-                    alt={`${manufacturerLogo.label} manufacturer logo`}
-                    onError={() => setManufacturerImageFailed(true)}
-                />
-            ) : (
-                <span className="manufacturer-fallback">{manufacturerLogo?.label ?? 'Unknown'}</span>
+            {showManufacturer && (
+                <>
+                    <span className="car-badge-divider" aria-hidden="true">|</span>
+                    {manufacturerLogo && !manufacturerImageFailed ? (
+                        <img
+                            className="manufacturer-logo"
+                            src={manufacturerLogo.url}
+                            alt={`${manufacturerLogo.label} manufacturer logo`}
+                            onError={() => setManufacturerImageFailed(true)}
+                        />
+                    ) : (
+                        <span className="manufacturer-fallback">{manufacturerLogo?.label ?? 'Unknown'}</span>
+                    )}
+                </>
             )}
         </span>
     );
@@ -262,13 +283,15 @@ function getStageLabel(feed) {
 }
 
 export default function NascarLive() {
-    const [settings, setSettings] = useState({ size: 's', spacing: 'comfortable', delay: 0 });
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [settings, setSettings] = useState({ size: 's', spacing: 'comfortable', delay: 0, columns: defaultColumns });
     const [feed, setFeed] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [flagFlashKey, setFlagFlashKey] = useState(0);
     const [isFlagFlashing, setIsFlagFlashing] = useState(false);
     const previousFlagState = useRef(null);
+    const settingsMenuRef = useRef(null);
 
     useEffect(() => {
         try {
@@ -279,6 +302,9 @@ export default function NascarLive() {
                     size: sizeOptions[parsed.size] ? parsed.size : current.size,
                     spacing: spacingOptions[parsed.spacing] ? parsed.spacing : current.spacing,
                     delay: delayOptions.includes(Number(parsed.delay)) ? Number(parsed.delay) : current.delay,
+                    columns: Object.fromEntries(
+                        Object.keys(columnOptions).map((key) => [key, parsed.columns?.[key] !== false]),
+                    ),
                 }));
             }
         } catch (err) {
@@ -289,6 +315,21 @@ export default function NascarLive() {
     useEffect(() => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     }, [settings]);
+
+    useEffect(() => {
+        if (!settingsOpen) {
+            return undefined;
+        }
+
+        const handleOutsidePointerDown = (event) => {
+            if (!settingsMenuRef.current?.contains(event.target)) {
+                setSettingsOpen(false);
+            }
+        };
+
+        document.addEventListener('pointerdown', handleOutsidePointerDown);
+        return () => document.removeEventListener('pointerdown', handleOutsidePointerDown);
+    }, [settingsOpen]);
 
     useEffect(() => {
         const nextFlagState = feed?.flag_state;
@@ -398,7 +439,10 @@ export default function NascarLive() {
                                 <span className="label centered-label">Fastest lap</span>
                                 {fastestVehicle ? (
                                     <div className="fastest-driver">
-                                        <NascarCarBadge carNumber={fastestVehicle.vehicle_number} />
+                                        <NascarCarBadge
+                                            carNumber={fastestVehicle.vehicle_number}
+                                            showManufacturer={false}
+                                        />
                                         <div className="fastest-driver-info">
                                             <strong>{getVehicleName(fastestVehicle)}</strong>
                                             <span>
@@ -420,53 +464,78 @@ export default function NascarLive() {
                             </article>
                             <div className="data-card settings-card">
                                 <span className="label centered-label">Settings</span>
-                                <label className="delay-picker" htmlFor="broadcast-delay">
-                                    <span>Delay</span>
-                                    <select
-                                        id="broadcast-delay"
-                                        value={settings.delay}
-                                        onChange={(event) => setSettings((current) => ({ ...current, delay: Number(event.target.value) }))}
+                                <div className="settings-menu" ref={settingsMenuRef}>
+                                    <button
+                                        type="button"
+                                        className="settings-toggle"
+                                        aria-label="Toggle dashboard settings"
+                                        aria-expanded={settingsOpen}
+                                        onClick={() => setSettingsOpen((open) => !open)}
                                     >
-                                        {delayOptions.map((value) => (
-                                            <option key={value} value={value}>{value === 0 ? 'Live' : `${value}s`}</option>
-                                        ))}
-                                    </select>
-                                </label>
+                                        {gearIcon}
+                                    </button>
 
-                                <div className="settings-group">
-                                    <label className="settings-label" htmlFor="font-size">Font</label>
-                                    <select
-                                        id="font-size"
-                                        value={settings.size}
-                                        onChange={(event) => setSettings((current) => ({ ...current, size: event.target.value }))}
-                                    >
-                                        {Object.entries(sizeOptions).map(([key, option]) => (
-                                            <option
-                                                key={key}
-                                                value={key}
-                                            >
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                    {settingsOpen && (
+                                        <div className="settings-popover" role="dialog" aria-label="Dashboard settings">
+                                            <label className="delay-picker" htmlFor="broadcast-delay">
+                                                <span>Delay</span>
+                                                <select
+                                                    id="broadcast-delay"
+                                                    value={settings.delay}
+                                                    onChange={(event) => setSettings((current) => ({ ...current, delay: Number(event.target.value) }))}
+                                                >
+                                                    {delayOptions.map((value) => (
+                                                        <option key={value} value={value}>{value === 0 ? 'Live' : `${value}s`}</option>
+                                                    ))}
+                                                </select>
+                                            </label>
 
-                                <div className="settings-group">
-                                    <label className="settings-label" htmlFor="table-spacing">Spacing</label>
-                                    <select
-                                        id="table-spacing"
-                                        value={settings.spacing}
-                                        onChange={(event) => setSettings((current) => ({ ...current, spacing: event.target.value }))}
-                                    >
-                                        {Object.entries(spacingOptions).map(([key, option]) => (
-                                            <option
-                                                key={key}
-                                                value={key}
-                                            >
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                            <div className="settings-group">
+                                                <label className="settings-label" htmlFor="font-size">Font</label>
+                                                <select
+                                                    id="font-size"
+                                                    value={settings.size}
+                                                    onChange={(event) => setSettings((current) => ({ ...current, size: event.target.value }))}
+                                                >
+                                                    {Object.entries(sizeOptions).map(([key, option]) => (
+                                                        <option key={key} value={key}>{option.label}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            <div className="settings-group">
+                                                <label className="settings-label" htmlFor="table-spacing">Spacing</label>
+                                                <select
+                                                    id="table-spacing"
+                                                    value={settings.spacing}
+                                                    onChange={(event) => setSettings((current) => ({ ...current, spacing: event.target.value }))}
+                                                >
+                                                    {Object.entries(spacingOptions).map(([key, option]) => (
+                                                        <option key={key} value={key}>{option.label}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            <fieldset className="settings-columns">
+                                                <legend className="settings-label">Columns</legend>
+                                                <div className="column-options">
+                                                    {Object.entries(columnOptions).map(([key, label]) => (
+                                                        <label key={key} className="column-option">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={settings.columns[key]}
+                                                                onChange={(event) => setSettings((current) => ({
+                                                                    ...current,
+                                                                    columns: { ...current.columns, [key]: event.target.checked },
+                                                                }))}
+                                                            />
+                                                            <span>{label}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </section>
@@ -494,18 +563,18 @@ export default function NascarLive() {
                                     <thead>
                                         <tr>
                                             <th>Pos</th>
-                                            <th>Car</th>
+                                            {settings.columns.car && <th>Car</th>}
                                             <th>Driver</th>
-                                            <th>Trend</th>
-                                            <th>Laps</th>
-                                            <th>Avg</th>
-                                            <th>Avg pos</th>
-                                            <th>Led</th>
-                                            <th>Pit avg</th>
-                                            <th>Last lap</th>
-                                            <th>Best lap</th>
-                                            <th>Passes</th>
-                                            <th>Gap</th>
+                                            {settings.columns.trend && <th>Trend</th>}
+                                            {settings.columns.laps && <th>Laps</th>}
+                                            {settings.columns.averageSpeed && <th>Avg</th>}
+                                            {settings.columns.averagePosition && <th>Avg pos</th>}
+                                            {settings.columns.lapsLed && <th>Led</th>}
+                                            {settings.columns.pitAverage && <th>Pit avg</th>}
+                                            {settings.columns.lastLap && <th>Last lap</th>}
+                                            {settings.columns.bestLap && <th>Best lap</th>}
+                                            {settings.columns.passes && <th>Passes</th>}
+                                            {settings.columns.gap && <th>Gap</th>}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -517,26 +586,26 @@ export default function NascarLive() {
                                             return (
                                                 <tr key={`${vehicle.vehicle_number}-${vehicle.driver?.driver_id ?? 'row'}`}>
                                                     <td className="position-value">{vehicle.running_position ?? '--'}</td>
-                                                    <td className="car-number-cell">
+                                                    {settings.columns.car && <td className="car-number-cell">
                                                         <NascarCarBadge
                                                             carNumber={vehicle.vehicle_number}
                                                             manufacturer={vehicle.vehicle_manufacturer}
                                                         />
-                                                    </td>
+                                                    </td>}
                                                     <td className="driver-name-cell">{getVehicleName(vehicle)}</td>
-                                                    <td className={`trend-cell ${trend.direction}`} aria-label={`${trend.label} by ${Math.abs(getPositionChange(vehicle))} positions`}>
+                                                    {settings.columns.trend && <td className={`trend-cell ${trend.direction}`} aria-label={`${trend.label} by ${Math.abs(getPositionChange(vehicle))} positions`}>
                                                         <span className="trend-indicator">{trend.direction === 'gaining' ? '▲' : trend.direction === 'falling' ? '▼' : '•'}</span>
                                                         <span>{trend.value}</span>
-                                                    </td>
-                                                    <td>{vehicle.laps_completed ?? '--'}</td>
-                                                    <td>{vehicle.average_speed ? `${vehicle.average_speed.toFixed(1)} mph` : '--'}</td>
-                                                    <td>{vehicle.average_running_position ? vehicle.average_running_position.toFixed(1) : '--'}</td>
-                                                    <td>{getLapsLed(vehicle)}</td>
-                                                    <td>{vehiclePitAvg ? `${vehiclePitAvg.toFixed(1)}s` : '--'}</td>
-                                                    <td>{vehicle.last_lap_time ? `${formatLapTime(vehicle.last_lap_time)}s` : '--'}</td>
-                                                    <td>{vehicle.best_lap_time ? `${formatLapTime(vehicle.best_lap_time)}s` : '--'}</td>
-                                                    <td>{vehicle.passes_made ?? '--'}</td>
-                                                    <td>{vehicleGap}</td>
+                                                    </td>}
+                                                    {settings.columns.laps && <td>{vehicle.laps_completed ?? '--'}</td>}
+                                                    {settings.columns.averageSpeed && <td>{vehicle.average_speed ? `${vehicle.average_speed.toFixed(1)} mph` : '--'}</td>}
+                                                    {settings.columns.averagePosition && <td>{vehicle.average_running_position ? vehicle.average_running_position.toFixed(1) : '--'}</td>}
+                                                    {settings.columns.lapsLed && <td>{getLapsLed(vehicle)}</td>}
+                                                    {settings.columns.pitAverage && <td>{vehiclePitAvg ? `${vehiclePitAvg.toFixed(1)}s` : '--'}</td>}
+                                                    {settings.columns.lastLap && <td>{vehicle.last_lap_time ? `${formatLapTime(vehicle.last_lap_time)}s` : '--'}</td>}
+                                                    {settings.columns.bestLap && <td>{vehicle.best_lap_time ? `${formatLapTime(vehicle.best_lap_time)}s` : '--'}</td>}
+                                                    {settings.columns.passes && <td>{vehicle.passes_made ?? '--'}</td>}
+                                                    {settings.columns.gap && <td>{vehicleGap}</td>}
                                                 </tr>
                                             );
                                         })}
