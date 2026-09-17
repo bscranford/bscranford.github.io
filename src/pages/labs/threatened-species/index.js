@@ -2,7 +2,6 @@ import './styles.css';
 import * as d3 from 'd3'
 import fullCountryList from '../threatened-species/countryList.json'
 import geoJson from '../threatened-species/geo.json'
-import geoJsonCentroid from '../threatened-species/geoCentroids.json'
 import useFetch from '@/app/hooks/useFetch';
 import Head from 'next/head';
 import { useState, useEffect, useCallback } from 'react';
@@ -28,12 +27,8 @@ export default function ThreatenedSpecies() {
     }
 
     // Fetch red list data
-    const url = "https://apiv3.iucnredlist.org/api/v3/country/getspecies/" + state.countryCode;
+    const url = "https://apiv4.iucnredlist.org/api/v3/country/getspecies/" + state.countryCode;
     const { data, loading, error } = useFetch(url);
-
-    if (error) {
-        console.error(error);
-    }
 
     // Get count of VU, EN, and CR species
     let vulnerableCount = 0;
@@ -68,58 +63,46 @@ export default function ThreatenedSpecies() {
         }
     }, [threatenedSpecies]);
 
-    // Reference to svg to populate with map
+    // Reference to the map container
     const svgRef = useRef(null);
 
-    // Build country map
-    const geoData = geoJson;
+    // Fit every selected country to the same map frame instead of using country-specific zoom values.
     useEffect(() => {
-        let countryMap = {};
-        let countryCenter = null;
+        const container = d3.select(svgRef.current);
+        container.selectAll('svg').remove();
 
-        // Filter all geoData to return current country data
-        let scaleFactor = 1;
-        countryMap.features = geoData.features.filter(function (d) {
-            if (d.properties.zoom) {
-                scaleFactor = d.properties.zoom
-            }
-            return d.properties.name == state.country;
-        })
-
-        // Get centroid coordinates for current country
-        geoJsonCentroid.features.forEach((feature) => {
-            if (feature.properties["COUNTRY"] == state.country) {
-                countryCenter = feature.geometry.coordinates;
-            }
-        })
-
-        // Check that svg element has been rendered
-        if (d3.select(svgRef.current)) {
-            d3.select(".svgMap").selectAll('svg').remove();
-
-            // Setup map and projection
-            const projection = d3.geoMercator()
-                .center(countryCenter)
-                .scale(900 * scaleFactor) // "Zoom"
-                .translate([400, 200]) // width and height / 2
-
-            // Draw the map
-            const svgContainer = d3.select(".svgMap")
-                .append('svg')
-                .attr('viewBox', '0 0 800 450')
-
-            svgContainer.append("g")
-                .selectAll("path")
-                .data(countryMap.features)
-                .enter()
-                .append("path")
-                .attr("fill", updateColor())
-                .attr("d", d3.geoPath()
-                    .projection(projection)
-                )
-                .style("stroke", "none")
+        const selectedFeature = geoJson.features.find((feature) => feature.properties.name === state.country);
+        if (!selectedFeature) {
+            return undefined;
         }
-    }, [state.country, threatenedSpecies, geoData.features, updateColor]);
+
+        const width = 800;
+        const height = 450;
+        const padding = 28;
+        const countryMap = {
+            type: 'FeatureCollection',
+            features: [selectedFeature],
+        };
+        const projection = d3.geoMercator().fitExtent(
+            [[padding, padding], [width - padding, height - padding]],
+            countryMap,
+        );
+        const svgContainer = container
+            .append('svg')
+            .attr('viewBox', `0 0 ${width} ${height}`)
+            .attr('preserveAspectRatio', 'xMidYMid meet')
+            .attr('role', 'img')
+            .attr('aria-label', `${state.country} outline`);
+
+        svgContainer
+            .append('path')
+            .datum(selectedFeature)
+            .attr('fill', updateColor())
+            .attr('d', d3.geoPath().projection(projection))
+            .style('stroke', 'none');
+
+        return () => container.selectAll('svg').remove();
+    }, [state.country, threatenedSpecies, updateColor]);
 
     // Country selection handling
     function updateCountryCode(object, value) {
@@ -159,7 +142,7 @@ export default function ThreatenedSpecies() {
                     <span className="focus"></span>
                 </div>
 
-                <div className="svgMap"></div>
+                <div className="svgMap" ref={svgRef}></div>
 
                 <h2 className="country-heading">{getFlagEmoji(state.countryCode)} {state.country}</h2>
                 <div className="table-lockup">
@@ -196,6 +179,12 @@ export default function ThreatenedSpecies() {
                     <div className="loading-state">
                         <LoadingSpinner />
                     </div>
+                }
+
+                {error && !loading &&
+                    <p className="error-state" role="alert">
+                        Species data is temporarily unavailable. The IUCN service is blocking this browser request; please try again later.
+                    </p>
                 }
 
                 <small>Data provided by the <a href="https://www.iucnredlist.org/" target="_blank" rel="noreferrer noopener">IUCN Red List</a></small>

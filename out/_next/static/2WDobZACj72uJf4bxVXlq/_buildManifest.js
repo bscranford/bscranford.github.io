@@ -15,7 +15,7 @@ self.__BUILD_MANIFEST = {
     "static/chunks/3-26yer7thg9w.js"
   ],
   "/labs/threatened-species": [
-    "static/chunks/22d7tbl-pupv2.js"
+    "static/chunks/08wbn8g-xpeh3.js"
   ],
   "/labs/threatened-species/LoadingSpinner": [
     "static/chunks/1c4vpbmjvjto5.js"

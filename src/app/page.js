@@ -13,7 +13,7 @@ export default function Home() {
                 </header>
                 <section className="content-wrapper" aria-labelledby="about-heading">
                     <h2 id="about-heading" className="sr-only">About</h2>
-                    <p>I&apos;m a software engineer living in Washington, DC.</p>
+                    <p>I&apos;m a software developer living in Washington, DC.</p>
                     <p>Feel free to reach out - I&apos;m always available to discuss new ideas and opportunities.</p>
                     <p>
                         Email:{' '}
