@@ -19,6 +19,10 @@ const manufacturerLogos = {
         label: 'Toyota',
         url: 'https://www.nascar.com/wp-content/uploads/sites/7/2020/04/06/Toyota-35x35.png',
     },
+    Ram: {
+        label: 'Ram',
+        url: 'https://cf.nascar.com/data/images/makes/Ram.png',
+    },
 };
 
 const flagStateMap = {
@@ -30,7 +34,7 @@ const flagStateMap = {
     5: 'Black',
     6: 'Blue',
     7: 'Finish',
-    9: 'Final lap',
+    9: 'Checkered',
     10: 'Caution',
     11: 'Caution',
     12: 'Pit road',
@@ -44,8 +48,8 @@ const flagStateColors = {
     4: '#f97316',
     5: '#111827',
     6: '#60a5fa',
-    7: '#c084fc',
-    9: '#f59e0b',
+    7: '#f8fafc',
+    9: '#f8fafc',
     10: '#facc15',
     11: '#facc15',
     12: '#93c5fd',
@@ -135,7 +139,15 @@ function getManufacturerLogo(manufacturer) {
         return manufacturerLogos.Toyota;
     }
 
+    if (normalizedManufacturer === 'ram' || normalizedManufacturer === 'dodge ram' || normalizedManufacturer === 'dodge') {
+        return manufacturerLogos.Ram;
+    }
+
     return null;
+}
+
+function isCheckeredFlag(flagState) {
+    return [4, 7, 9].includes(Number(flagState));
 }
 
 function NascarCarBadge({ carNumber, manufacturer, showManufacturer = true }) {
@@ -359,7 +371,7 @@ export default function NascarLive() {
 
         const fetchFeed = async () => {
             try {
-                const response = await fetch(FEED_URL, { cache: 'no-store' });
+                const response = await fetch(`${FEED_URL}?t=${Date.now()}`, { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error(`Live feed request failed with status ${response.status}`);
                 }
@@ -391,7 +403,7 @@ export default function NascarLive() {
         };
 
         fetchFeed();
-        intervalId = setInterval(fetchFeed, 15000);
+        intervalId = setInterval(fetchFeed, 5000);
 
         return () => {
             isActive = false;
@@ -548,7 +560,7 @@ export default function NascarLive() {
                                 <div className="progress-track" aria-label="Race progress bar">
                                     <span
                                         key={flagFlashKey}
-                                        className={`progress-fill${isFlagFlashing ? ' flag-changing' : ''}`}
+                                        className={`progress-fill${isFlagFlashing ? ' flag-changing' : ''}${isCheckeredFlag(feed.flag_state) ? ' checkered-flag' : ''}`}
                                         style={{
                                             width: `${Math.min(100, Math.max(0, raceProgress))}%`,
                                             '--flag-color': flagStateColors[feed.flag_state] ?? '#94a3b8',

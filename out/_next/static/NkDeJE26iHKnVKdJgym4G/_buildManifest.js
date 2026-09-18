@@ -12,10 +12,10 @@ self.__BUILD_MANIFEST = {
     "static/chunks/2hbvwx4h7i5uw.js"
   ],
   "/labs/nascar-live": [
-    "static/chunks/3-26yer7thg9w.js"
+    "static/chunks/0s4hi38pszlpe.js"
   ],
   "/labs/threatened-species": [
-    "static/chunks/08wbn8g-xpeh3.js"
+    "static/chunks/020i7npl59ic5.js"
   ],
   "/labs/threatened-species/LoadingSpinner": [
     "static/chunks/1c4vpbmjvjto5.js"
