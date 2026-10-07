@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Head from 'next/head'
 import botwImg from '../../../public/images/project-previews/botw.png'
 import eplImg from '../../../public/images/project-previews/epl-alltime.png'
-import speciesImg from '../../../public/images/project-previews/threatened-species.png'
 import nascarImg from '../../../public/images/project-previews/nascar-live.png'
 import '../../app/globals.css'
 import '../../app/styles.css'
@@ -43,17 +42,6 @@ export default function Labs() {
                                     alt="Visual preview of EPL All Time Standings Project"
                                 />
                                 <Link href="/labs/epl-standings" aria-label="Open EPL all-time standings project">EPL All Time<br />Standings</Link>
-                            </article>
-                        </li>
-                        <li>
-                            <article>
-                                <Image
-                                    src={speciesImg}
-                                    width={180}
-                                    height={120}
-                                    alt="Visual preview of Threatened Species Project"
-                                />
-                                <Link href="/labs/threatened-species" aria-label="Open threatened species project">Threatened<br />Species</Link>
                             </article>
                         </li>
                         <li>

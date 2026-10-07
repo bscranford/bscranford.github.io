@@ -3,22 +3,16 @@ self.__BUILD_MANIFEST = {
     "static/chunks/0zlxwiisbfx52.js"
   ],
   "/labs": [
-    "static/chunks/3b0hoqvj85d3r.js"
+    "static/chunks/33gqum5op_ttk.js"
   ],
   "/labs/epl-standings": [
-    "static/chunks/17f8dk3e07t0g.js"
+    "static/chunks/1v1_28blxtmj2.js"
   ],
   "/labs/hyrule": [
-    "static/chunks/2hbvwx4h7i5uw.js"
+    "static/chunks/2-i6hd1w5ejfz.js"
   ],
   "/labs/nascar-live": [
-    "static/chunks/0s4hi38pszlpe.js"
-  ],
-  "/labs/threatened-species": [
-    "static/chunks/020i7npl59ic5.js"
-  ],
-  "/labs/threatened-species/LoadingSpinner": [
-    "static/chunks/1c4vpbmjvjto5.js"
+    "static/chunks/0o5n8w66e9cgd.js"
   ],
   "__rewrites": {
     "afterFiles": [],
@@ -31,8 +25,6 @@ self.__BUILD_MANIFEST = {
     "/labs",
     "/labs/epl-standings",
     "/labs/hyrule",
-    "/labs/nascar-live",
-    "/labs/threatened-species",
-    "/labs/threatened-species/LoadingSpinner"
+    "/labs/nascar-live"
   ]
 };self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()

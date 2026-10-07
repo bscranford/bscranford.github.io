@@ -26,33 +26,25 @@ const manufacturerLogos = {
 };
 
 const flagStateMap = {
-    0: 'Green',
-    1: 'Yellow',
-    2: 'Red',
-    3: 'White',
-    4: 'Checkered',
-    5: 'Black',
-    6: 'Blue',
-    7: 'Finish',
-    9: 'Checkered',
-    10: 'Caution',
-    11: 'Caution',
-    12: 'Pit road',
+    0: 'None',
+    1: 'Green',
+    2: 'Yellow',
+    3: 'Red',
+    4: 'White',
+    5: 'Checkered',
+    8: 'Hot track',
+    9: 'Cold track',
 };
 
 const flagStateColors = {
-    0: '#22c55e',
-    1: '#facc15',
-    2: '#ef4444',
-    3: '#e2e8f0',
-    4: '#f97316',
-    5: '#111827',
-    6: '#60a5fa',
-    7: '#f8fafc',
-    9: '#f8fafc',
-    10: '#facc15',
-    11: '#facc15',
-    12: '#93c5fd',
+    0: '#94a3b8',
+    1: '#22c55e',
+    2: '#facc15',
+    3: '#ef4444',
+    4: '#f8fafc',
+    5: '#f8fafc',
+    8: '#fb923c',
+    9: '#94a3b8',
 };
 
 const sizeOptions = {
@@ -146,8 +138,19 @@ function getManufacturerLogo(manufacturer) {
     return null;
 }
 
-function isCheckeredFlag(flagState) {
-    return [4, 7, 9].includes(Number(flagState));
+function isCheckeredFlag(flagState, feed) {
+    const lapNumber = Number(feed?.lap_number);
+    const lapsInRace = Number(feed?.laps_in_race);
+    const lapsToGo = Number(feed?.laps_to_go);
+
+    return Number(flagState) === 5 || (
+        Number.isFinite(lapNumber)
+        && Number.isFinite(lapsInRace)
+        && lapsInRace > 0
+        && lapNumber >= lapsInRace
+        && Number.isFinite(lapsToGo)
+        && lapsToGo <= 0
+    );
 }
 
 function NascarCarBadge({ carNumber, manufacturer, showManufacturer = true }) {
@@ -560,7 +563,7 @@ export default function NascarLive() {
                                 <div className="progress-track" aria-label="Race progress bar">
                                     <span
                                         key={flagFlashKey}
-                                        className={`progress-fill${isFlagFlashing ? ' flag-changing' : ''}${isCheckeredFlag(feed.flag_state) ? ' checkered-flag' : ''}`}
+                                        className={`progress-fill${isFlagFlashing ? ' flag-changing' : ''}${isCheckeredFlag(feed.flag_state, feed) ? ' checkered-flag' : ''}`}
                                         style={{
                                             width: `${Math.min(100, Math.max(0, raceProgress))}%`,
                                             '--flag-color': flagStateColors[feed.flag_state] ?? '#94a3b8',

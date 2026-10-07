@@ -68,9 +68,11 @@ export default function Epl() {
                             </div>
                             <div className="stat-card">
                                 <p className="stat-name">Colors</p>
-                                {club.colors.map((color, index) => (
-                                    <span className="dot" key={index} style={{ backgroundColor: color }}></span>
-                                ))}
+                                <div className="stat-colors">
+                                    {club.colors.map((color, index) => (
+                                        <span className="dot" key={index} style={{ backgroundColor: color }}></span>
+                                    ))}
+                                </div>
                             </div>
                             <div className="stat-card">
                                 <p className="stat-name">Nickname</p>
