@@ -25,14 +25,19 @@ function useFetch(url, options = {}) {
                 }
 
                 const result = await response.json();
+                if (controller.signal.aborted) {
+                    return;
+                }
                 setData(result);
             } catch (err) {
-                if (err.name === 'AbortError') {
+                if (controller.signal.aborted || err.name === 'AbortError') {
                     return;
                 }
                 setError(err);
             } finally {
-                setLoading(false);
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
             }
         };
 

@@ -5,7 +5,7 @@ import './styles.css';
 
 export default function Hyrule() {
     // Fetch compendium data
-    const { data, loading, error } = useFetch('https://botw-compendium.herokuapp.com/api/v3/compendium/all?game=2');
+    const { data, loading, error } = useFetch('https://api.hyrule-compendium.com/v3/compendium/all?game=2');
     if (loading) return <div className="content-wrapper">Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
