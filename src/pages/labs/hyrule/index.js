@@ -1,4 +1,4 @@
-import {Tabs, Tab} from "@nextui-org/tabs";
+import { Tabs, Tab } from "@nextui-org/tabs";
 import Head from 'next/head';
 import useFetch from '../../../app/hooks/useFetch';
 import './styles.css';
@@ -35,7 +35,7 @@ export default function Hyrule() {
                             <p>Common Locations: {JSON.stringify(item.common_locations, (key, value) => value === null ? "None Listed" : value, ' ').replace(/]|[[]/g, '').replace(/"/g, '')}</p>
                         </div>
                         { /* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={item.image} alt="Image"/>
+                        <img src={item.image} alt="Image" />
                     </li>
                 ))}
             </ul>

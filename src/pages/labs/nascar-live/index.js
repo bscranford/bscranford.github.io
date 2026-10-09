@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import './styles.css';
 
 const FEED_URL = 'https://cf.nascar.com/live/feeds/live-feed.json';
-const CAR_BADGE_URL = 'https://cf.nascar.com/data/images/carbadges/1';
+const CAR_BADGE_URL = 'https://cf.nascar.com/data/images/carbadges';
 const STORAGE_KEY = 'nascar-live-settings';
 
 const manufacturerLogos = {
@@ -113,7 +113,8 @@ function getVehicleName(vehicle) {
         return `Car ${vehicle?.vehicle_number ?? '--'}`;
     }
 
-    return driver.full_name || `${driver.first_name || ''} ${driver.last_name || ''}`.trim() || `Car ${vehicle?.vehicle_number ?? '--'}`;
+    const name = driver.full_name || `${driver.first_name || ''} ${driver.last_name || ''}`.trim() || `Car ${vehicle?.vehicle_number ?? '--'}`;
+    return name.replace(/\s*(?:#|\([ci]\))[\s\S]*$/i, '').trim();
 }
 
 function getManufacturerLogo(manufacturer) {
@@ -153,24 +154,25 @@ function isCheckeredFlag(flagState, feed) {
     );
 }
 
-function NascarCarBadge({ carNumber, manufacturer, showManufacturer = true }) {
+function NascarCarBadge({ carNumber, manufacturer, seriesId = 1, showManufacturer = true }) {
     const [imageFailed, setImageFailed] = useState(false);
     const [manufacturerImageFailed, setManufacturerImageFailed] = useState(false);
     const normalizedNumber = String(carNumber ?? '--').trim();
     const hasNumber = normalizedNumber !== '--' && normalizedNumber !== '';
+    const normalizedSeriesId = [1, 2, 3].includes(Number(seriesId)) ? Number(seriesId) : 1;
     const manufacturerLogo = showManufacturer ? getManufacturerLogo(manufacturer) : null;
 
     useEffect(() => {
         setImageFailed(false);
         setManufacturerImageFailed(false);
-    }, [normalizedNumber, manufacturerLogo?.url]);
+    }, [normalizedNumber, normalizedSeriesId, manufacturerLogo?.url]);
 
     return (
         <span className="car-badge">
             <span className="car-number-image">
                 {hasNumber && !imageFailed ? (
                     <img
-                        src={`${CAR_BADGE_URL}/${encodeURIComponent(normalizedNumber)}.png`}
+                        src={`${CAR_BADGE_URL}/${normalizedSeriesId}/${encodeURIComponent(normalizedNumber)}.png`}
                         alt={`Car ${normalizedNumber}`}
                         onError={() => setImageFailed(true)}
                     />
@@ -456,6 +458,7 @@ export default function NascarLive() {
                                     <div className="fastest-driver">
                                         <NascarCarBadge
                                             carNumber={fastestVehicle.vehicle_number}
+                                            seriesId={feed.series_id}
                                             showManufacturer={false}
                                         />
                                         <div className="fastest-driver-info">
@@ -605,6 +608,7 @@ export default function NascarLive() {
                                                         <NascarCarBadge
                                                             carNumber={vehicle.vehicle_number}
                                                             manufacturer={vehicle.vehicle_manufacturer}
+                                                            seriesId={feed.series_id}
                                                         />
                                                     </td>}
                                                     <td className="driver-name-cell">{getVehicleName(vehicle)}</td>

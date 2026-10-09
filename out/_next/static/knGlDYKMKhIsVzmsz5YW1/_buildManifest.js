@@ -12,7 +12,7 @@ self.__BUILD_MANIFEST = {
     "static/chunks/1gk1slidft348.js"
   ],
   "/labs/nascar-live": [
-    "static/chunks/0o5n8w66e9cgd.js"
+    "static/chunks/16tj8847p-97b.js"
   ],
   "__rewrites": {
     "afterFiles": [],
