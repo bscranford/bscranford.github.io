@@ -240,21 +240,17 @@ function getFastestVehicle(vehicles) {
     }, null);
 }
 
-function formatPositionGap(value) {
+function formatRaceGap(value) {
     if (typeof value !== 'number' || !Number.isFinite(value)) {
         return '--';
     }
 
-    if (value <= 0) {
-        return 'Leader';
-    }
-
-    return `${value} pos`;
+    return value > 0 ? `+${value.toFixed(1)}s` : '--';
 }
 
 function getPositionChange(vehicle) {
-    const startPosition = Number(vehicle?.start_position ?? vehicle?.running_position ?? 0);
-    const currentPosition = Number(vehicle?.running_position ?? vehicle?.start_position ?? 0);
+    const startPosition = Number(vehicle?.starting_position ?? vehicle?.start_position ?? vehicle?.running_position);
+    const currentPosition = Number(vehicle?.running_position ?? vehicle?.starting_position ?? vehicle?.start_position);
 
     if (!Number.isFinite(startPosition) || !Number.isFinite(currentPosition)) {
         return 0;
@@ -598,7 +594,9 @@ export default function NascarLive() {
                                     <tbody>
                                         {sortedVehicles.map((vehicle) => {
                                             const vehiclePitAvg = getAveragePitStopTime(vehicle);
-                                            const vehicleGap = leader ? formatPositionGap((leader.running_position ?? 1) - (vehicle.running_position ?? 999)) : '--';
+                                            const vehicleGap = Number(vehicle.running_position) === 1
+                                                ? 'Leader'
+                                                : formatRaceGap(Number(vehicle.delta));
                                             const trend = getPositionTrend(vehicle);
 
                                             return (
